@@ -1,2 +1,0 @@
-# CrisisBystander
-Newsletter for CrisisBystander
