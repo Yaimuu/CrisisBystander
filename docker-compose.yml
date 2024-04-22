@@ -1,0 +1,19 @@
+version: "3.7"
+services:
+  app:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    image: crisis-img
+    container_name: crisis-app
+    restart: unless-stopped
+    working_dir: /app
+    volumes:
+      - ./:/app
+    ports:
+      - 8090:80
+    networks:
+      - crisis-network
+networks:
+  crisis-network:
+    driver: bridge
