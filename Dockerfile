@@ -23,12 +23,11 @@ COPY conf/php.ini /usr/local/etc/php/conf.d/app.ini
 # RUN a2enmod ssl && a2ensite default-ssl
 # RUN a2enmod ssl && a2enmod rewrite
 
-
 # Apache
 # COPY errors /errors
 COPY conf/vhost.conf /etc/apache2/sites-available/000-default.conf
 COPY conf/apache.conf /etc/apache2/conf-available/z-app.conf
-COPY index.php /app/index.php
+COPY . ./
 # COPY ./conf/ssl/*.pem /etc/apache2/ssl/
     
 RUN a2enmod rewrite remoteip && \
