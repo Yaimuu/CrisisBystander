@@ -12,23 +12,25 @@ RUN apt-get update -qq && \
     git \
     gnupg \
     unzip \
+    zlib1g-dev libpng-dev libjpeg-dev libx11-dev libfreetype6-dev \
     zip && \
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # PHP Extensions
 RUN docker-php-ext-install -j$(nproc) opcache pdo_mysql
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg
 COPY conf/php.ini /usr/local/etc/php/conf.d/app.ini
 
-# RUN a2enmod ssl && a2ensite default-ssl
-# RUN a2enmod ssl && a2enmod rewrite
-
-# Apache
-# COPY errors /errors
+# Apache configuration
 COPY conf/vhost.conf /etc/apache2/sites-available/000-default.conf
 COPY conf/apache.conf /etc/apache2/conf-available/z-app.conf
-COPY . ./
-# COPY ./conf/ssl/*.pem /etc/apache2/ssl/
-    
+
+# Enable necessary Apache modules and configure virtual hosts
 RUN a2enmod rewrite remoteip && \
     a2enconf z-app
+
+# Build the container
+COPY . ./
+
+# CMD bash -c "chmod +x start.sh & ./start.sh"
